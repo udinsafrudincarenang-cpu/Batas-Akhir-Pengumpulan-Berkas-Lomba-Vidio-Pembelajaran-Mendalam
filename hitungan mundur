@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitungan Mundur Pengumpulan Video</title>
+    <!-- Memuat Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Menggunakan font Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Efek flip sederhana untuk angka */
+        .time-unit {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .time-value {
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+
+    <div class="text-center">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 text-indigo-300">HITUNGAN MUNDUR</h1>
+        <p class="text-lg sm:text-xl text-gray-400 mb-8">Batas Akhir Pengumpulan Video Pembelajaran</p>
+        <p class="text-xl sm:text-2xl font-semibold text-green-400 mb-8">10 November 2025, 23:59</p>
+
+
+        <!-- Kontainer Hitungan Mundur --><div id="countdown-container" class="flex justify-center items-center space-x-2 sm:space-x-4">
+            <!-- Hari --><div class="time-unit p-3 sm:p-6 bg-gray-800 rounded-lg shadow-xl w-20 sm:w-28">
+                <div id="days" class="text-4xl sm:text-6xl font-black text-white">00</div>
+                <div class="text-xs sm:text-sm uppercase text-gray-400 mt-1">Hari</div>
+            </div>
+            <!-- Jam --><div class="time-unit p-3 sm:p-6 bg-gray-800 rounded-lg shadow-xl w-20 sm:w-28">
+                <div id="hours" class="text-4xl sm:text-6xl font-black text-white">00</div>
+                <div class="text-xs sm:text-sm uppercase text-gray-400 mt-1">Jam</div>
+            </div>
+            <!-- Menit --><div class="time-unit p-3 sm:p-6 bg-gray-800 rounded-lg shadow-xl w-20 sm:w-28">
+                <div id="minutes" class="text-4xl sm:text-6xl font-black text-white">00</div>
+                <div class="text-xs sm:text-sm uppercase text-gray-400 mt-1">Menit</div>
+            </div>
+            <!-- Detik --><div class="time-unit p-3 sm:p-6 bg-gray-800 rounded-lg shadow-xl w-20 sm:w-28">
+                <div id="seconds" class="text-4xl sm:text-6xl font-black text-white">00</div>
+                <div class="text-xs sm:text-sm uppercase text-gray-400 mt-1">Detik</div>
+            </div>
+        </div>
+
+        <!-- Pesan Setelah Selesai --><div id="message-container" class="hidden mt-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-red-500">Waktu Pengumpulan Habis!</h2>
+            <p class="text-lg sm:text-xl text-gray-300">Batas akhir pengumpulan video telah lewat.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- PENGATURAN ---
+        // Tetapkan tanggal dan waktu akhir hitungan mundur
+        // Format: "YYYY-MM-DDTHH:MM:SS" (Contoh: "2025-11-10T23:59:00")
+        const targetDate = new Date("2025-11-10T23:59:00").getTime();
+
+        // Ambil elemen dari HTML
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const countdownContainer = document.getElementById('countdown-container');
+        const messageContainer = document.getElementById('message-container');
+
+        // Fungsi untuk menambahkan nol di depan angka < 10
+        function formatTime(time) {
+            return time < 10 ? `0${time}` : time;
+        }
+
+        // Fungsi untuk memperbarui hitungan mundur
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Jika hitungan mundur selesai
+            if (distance < 0) {
+                clearInterval(interval); // Hentikan interval
+                countdownContainer.classList.add('hidden'); // Sembunyikan timer
+                messageContainer.classList.remove('hidden'); // Tampilkan pesan selesai
+                return;
+            }
+
+            // Kalkulasi waktu
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Tampilkan hasil ke elemen HTML
+            daysEl.innerText = formatTime(days);
+            hoursEl.innerText = formatTime(hours);
+            minutesEl.innerText = formatTime(minutes);
+            secondsEl.innerText = formatTime(seconds);
+        }
+
+        // Jalankan fungsi updateCountdown setiap 1 detik
+        const interval = setInterval(updateCountdown, 1000);
+
+        // Panggil fungsi sekali saat halaman dimuat agar tidak ada jeda
+        updateCountdown();
+    </script>
+
+</body>
+</html>
